@@ -9,6 +9,10 @@ requests = "~=2.0.0"
 httpx = "~=0.27.0"
 
 [dev-packages]
+django-stubs = "~=4.2.7"
+black = "~=24.3.0"
+isort = "~=5.13.2"
+flake8 = "~=7.0.0"
 
 [requires]
 python_version = "3.12"
