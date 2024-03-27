@@ -20,6 +20,10 @@ class IssueSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class IssueCustomSerializer(serializers.Serializer):
+    id = serializers.IntegerField(max=13)
+
+
 @api_view()
 def get_issues(request) -> Response:
     issues = Issue.objects.all()
