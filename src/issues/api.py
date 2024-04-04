@@ -1,27 +1,20 @@
 import json
-from rest_framework.exceptions import APIException
+
 from django.shortcuts import get_object_or_404
-from django.http import Http404
 from rest_framework import serializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+
 from issues.models import Issue
 
 
 class IssueSerializer(serializers.ModelSerializer):
-    # def validate(self, attrs):
-    #     breakpoint()
-    #     return attrs
-
     class Meta:
         model = Issue
         # fields = ["id", "title", "body", "junior_id"]
         # exclude = ["id"]
         fields = "__all__"
 
-
-class IssueCustomSerializer(serializers.Serializer):
-    id = serializers.IntegerField(max=13)
 
 
 @api_view()
