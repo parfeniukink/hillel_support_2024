@@ -1,56 +1,42 @@
-import json
+from rest_framework import generics, serializers
 
-from django.shortcuts import get_object_or_404
-from rest_framework import serializers
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
+from users.enums import Role
 
-from issues.models import Issue
+from .enums import Status
+from .models import Issue
 
 
 class IssueSerializer(serializers.ModelSerializer):
+    status = serializers.IntegerField(required=False)
+    junior = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = Issue
         # fields = ["id", "title", "body", "junior_id"]
         # exclude = ["id"]
         fields = "__all__"
 
+    def validate(self, attrs):
+        attrs["status"] = Status.OPENED
+        return attrs
 
 
-@api_view()
-def get_issues(request) -> Response:
-    issues = Issue.objects.all()
-    results = [IssueSerializer(issue).data for issue in issues]
+class IssuesAPI(generics.ListCreateAPIView):
+    http_method_names = ["get", "post"]
+    serializer_class = IssueSerializer
 
-    return Response(data={"results": results})
+    def get_queryset(self):
+        return Issue.objects.all()
 
+    def post(self, request):
+        if request.user.role == Role.SENIOR:
+            raise Exception("The role is Senior")
 
-@api_view()
-def retrieve_issue(request, issue_id: int) -> Response:
-    instance = get_object_or_404(Issue, id=issue_id)
-    # try:
-    #     instance = Issue.objects.get(id=issue_id)
-    # except Issue.DoesNotExist:
-    #     raise Http404
-
-    return Response(data={"result": IssueSerializer(instance).data})
+        return super().post(request)
 
 
-@api_view(["POST"])
-def create_issue(request) -> Response:
-    try:
-        payload: dict = json.loads(request.body)
-    except json.decoder.JSONDecodeError:
-        raise Exception("Request Body is invalid ")
-
-    serializer = IssueSerializer(data=payload)
-    serializer.is_valid(raise_exception=True)
-
-    issue = Issue.objects.create(**serializer.validated_data)
-
-    return Response(data=IssueSerializer(issue).data)
-
-    # issues = Issue.objects.all()
-    # results = [IssueSerializer(issue).data for issue in issues]
-
-    return Response(data={"results": results})
+class IssuesRetrieveUpdateDeleteAPI(generics.RetrieveUpdateDestroyAPIView):
+    http_method_names = ["get", "put", "patch", "delete"]
+    serializer_class = IssueSerializer
+    queryset = Issue.objects.all()
+    lookup_url_kwarg = "id"

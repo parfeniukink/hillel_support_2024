@@ -16,7 +16,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     date_joined = models.DateTimeField(default=timezone.now)
 
-    role = models.CharField(max_length=20)
+    role = models.CharField(max_length=15)
 
     objects = UserManager()
 
