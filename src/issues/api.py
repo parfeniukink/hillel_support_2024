@@ -1,5 +1,4 @@
 from rest_framework import generics, serializers
-
 from users.enums import Role
 
 from .enums import Status
@@ -26,6 +25,7 @@ class IssuesAPI(generics.ListCreateAPIView):
     serializer_class = IssueSerializer
 
     def get_queryset(self):
+        # TODO: Separate for each role
         return Issue.objects.all()
 
     def post(self, request):

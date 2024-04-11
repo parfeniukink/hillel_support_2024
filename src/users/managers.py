@@ -1,5 +1,6 @@
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import BaseUserManager
+from users.enums import Role
 
 
 class UserManager(BaseUserManager):
@@ -18,4 +19,11 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email: str, password: str, **extra_fields):
-        pass
+        return self.create_user(
+            email=email,
+            password=password,
+            role=Role.SENIOR,
+            is_superuser=True,
+            is_staff=True,
+            is_active=True,
+        )
