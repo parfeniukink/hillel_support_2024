@@ -16,6 +16,7 @@ django-stubs = "~=4.2.7"
 black = "~=24.3.0"
 isort = "~=5.13.2"
 ruff = "~=0.3.6"
+pyright = "*"
 
 [requires]
 python_version = "3.12"

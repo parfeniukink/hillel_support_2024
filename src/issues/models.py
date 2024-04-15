@@ -1,11 +1,24 @@
 from django.db import models
+from django.db.models import Q
 from users.models import User
+
+# from enum import IntEnum
+# class IssueStatusChoices(IntEnum):
+#     OPENED = 1
+#     IN_PROGRESS = 2
+
+#     def choices(cls): ...
 
 ISSUE_STATUS_CHOICES = (
     (1, "Opened"),
     (2, "In progress"),
     (3, "Closed"),
 )
+
+
+class IssuesManager(models.Manager):
+    def filter_by_participant(self, user: User):
+        return self.filter(Q(junior=user) | Q(senior=user))
 
 
 class Issue(models.Model):
@@ -24,6 +37,8 @@ class Issue(models.Model):
         related_name="senior_issues",
         null=True,
     )
+
+    objects = IssuesManager()
 
     def __repr__(self) -> str:
         return f"Issue[{self.pk} {self.title[:10]}]"
