@@ -1,7 +1,31 @@
-FROM --platform=linux/x86_64 python:3.11.6-slim
+FROM --platform=linux/arm64/v8 python:3.11.6-slim
 
 
-RUN echo "Hello from hillel" >> test.txt
+# Update the system and install packages
+RUN apt-get update -y \
+    && pip install --upgrade pip \
+    # dependencies for building Python packages
+    && pip install --upgrade setuptools \
+    && apt-get install -y build-essential \
+    # install dependencies manager
+    && pip install pipenv \
+    # cleaning up unused files
+    && rm -rf /var/lib/apt/lists/*
 
 
-CMD ["/bin/bash"]
+# Install project dependencies
+COPY ./Pipfile ./Pipfile.lock /
+RUN pipenv sync --dev --system
+
+
+# cd /app (get or create)
+WORKDIR /app
+COPY ./ ./
+
+EXPOSE 8000
+
+# RUN python src/manage.py runserver
+# CMD sleep 2 && python src/manage.py runserver 0.0.0.0:8000
+
+ENTRYPOINT [ "python" ]
+CMD ["src/manage.py", "runserver"]
