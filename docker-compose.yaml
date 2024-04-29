@@ -1,12 +1,20 @@
 version: "3"
 
 services:
+  broker:
+    image: "redis:latest"
+    container_name: hillel_support_broker
+    ports:
+      - "6379:6379"
+
   database:
     image: "postgres:16"
     container_name: hillel_support_database
     ports:
       - "5432:5432"
     env_file: ".env"
+    volumes:
+      - "pg_data:/var/lib/postgresql/data"
 
   api:
     build:
@@ -19,3 +27,8 @@ services:
     env_file: ".env"
     depends_on:
       - database
+    volumes:
+      - ./:/app/
+
+volumes:
+  pg_data: {}

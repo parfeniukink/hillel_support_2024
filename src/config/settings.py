@@ -147,3 +147,8 @@ SIMPLE_JWT = {
 }
 
 APPEND_SLASH = False
+
+
+CELERY_BROKER_URL = os.getenv("REDIS_URL", default="redis://broker:6379/0")
+# CELERY_TASK_SERIALIZER = "pickle"
+# ...

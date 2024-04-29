@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
+from mailing.tasks import send_email
 from rest_framework import generics, permissions, serializers, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
@@ -53,6 +54,9 @@ class UserListCreateAPI(generics.ListCreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
+
+        send_email.delay()
+        # send_email.apply_async()
 
         return Response(
             UserRegistrationPublicSerializer(serializer.validated_data).data,

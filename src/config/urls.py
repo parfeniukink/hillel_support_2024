@@ -3,9 +3,9 @@ from django.urls import path
 from issues.api import (
     IssuesAPI,
     IssuesRetrieveUpdateDeleteAPI,
-    messages_api_dispatcher,
     issues_close,
-    issues_take
+    issues_take,
+    messages_api_dispatcher,
 )
 from rest_framework_simplejwt.views import TokenObtainPairView  # noqa
 from rest_framework_simplejwt.views import token_obtain_pair  # noqa
