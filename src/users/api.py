@@ -1,10 +1,16 @@
+import uuid
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
-from mailing.tasks import send_email
 from rest_framework import generics, permissions, serializers, status
+from rest_framework.decorators import api_view
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from users.enums import Role
+
+from .services import Activator
+
+# from . import services
 
 User = get_user_model()
 # == from users.models import User
@@ -55,8 +61,20 @@ class UserListCreateAPI(generics.ListCreateAPIView):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
 
-        send_email.delay()
-        # send_email.apply_async()
+        # Functional approach
+        # activation_key: uuid.UUID = services.create_activation_key(
+        #     email=serializer.data["email"]
+        # )
+        # services.send_user_activation_email(
+        #     email=serializer.data["email"], activation_key=activation_key
+        # )
+
+        # OOP approach
+        activator_service = Activator(email=serializer.data["email"])
+        activation_key = activator_service.create_activation_key()
+        activator_service.send_user_activation_email(
+            activation_key=activation_key
+        )
 
         return Response(
             UserRegistrationPublicSerializer(serializer.validated_data).data,
@@ -73,6 +91,12 @@ class UserListCreateAPI(generics.ListCreateAPIView):
             status=status.HTTP_200_OK,
             headers=self.get_success_headers(serializer.data),
         )
+
+
+@api_view(http_method_names=["POST"])
+def resend_activation_mail(request) -> Response:
+    breakpoint()
+    pass
 
 
 # def create_user(request: HttpRequest) -> JsonResponse:

@@ -1,0 +1,3 @@
+import uuid
+
+USER_ACTIVATION_UUID_NAMESPACE = uuid.UUID("f4c02f297ae44ceb8606a5e24cdb2dbb")
