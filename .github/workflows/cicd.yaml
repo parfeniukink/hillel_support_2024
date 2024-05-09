@@ -1,4 +1,4 @@
-name: Check code quality
+name: CI/CD
 
 on: [push]
 
@@ -16,3 +16,6 @@ jobs:
         run: python -m black --check . && python -m isort --check .
       - name: Run linter
         run: python -m ruff .
+
+  deploy-to-production:
+    ...
