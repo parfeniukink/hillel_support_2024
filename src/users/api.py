@@ -75,6 +75,10 @@ class UserListCreateAPI(generics.ListCreateAPIView):
         activator_service.send_user_activation_email(
             activation_key=activation_key
         )
+        activator_service.save_activation_information(
+            internal_user_id=serializer.instance.id,
+            activation_key=activation_key,
+        )
 
         return Response(
             UserRegistrationPublicSerializer(serializer.validated_data).data,

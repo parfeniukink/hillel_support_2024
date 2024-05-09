@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Q
 from users.models import User
+from shared.django import TimestampMixin
 
 # from enum import IntEnum
 # class IssueStatusChoices(IntEnum):
@@ -21,7 +22,7 @@ class IssuesManager(models.Manager):
         return self.filter(Q(junior=user) | Q(senior=user))
 
 
-class Issue(models.Model):
+class Issue(TimestampMixin):
     title = models.CharField(max_length=100)
     body = models.TextField(null=True)
     status = models.PositiveSmallIntegerField(choices=ISSUE_STATUS_CHOICES)
