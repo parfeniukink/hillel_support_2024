@@ -26,11 +26,21 @@ jobs:
     runs-on: ununtu-latest
     if: startsWith(github.event.ref, 'refs/tags/v')
     steps:
-      - name: Execute remote SSH commands using KEY
+      - name: Execute remote SSH commands using SSH KEY
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          port: ${{ secrets.PORT }}
-          script: whoami
+          host: ${{ secrets.SERVER_HOST }}
+          port: ${{ secrets.SERVER_PORT }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/hillel_support_2024
+            git pull
+            docker compose build
+            docker compose down
+            docker compose up -d
+
+            docker compose exec api python src/manage.py migrate
+
+            echo "🚀 Deployment successful"
+
