@@ -1,6 +1,14 @@
 name: CI/CD
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  pull_request:
+    branches:
+      - main
 
 jobs:
   code-qality:
@@ -9,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11' 
+          python-version: "3.11"
       - name: Install dependencies
         run: pip install pipenv && pipenv install --dev --system
       - name: Run fomatters
@@ -18,4 +26,15 @@ jobs:
         run: python -m ruff .
 
   deploy-to-production:
-    ...
+    needs: code-quality
+    runs-on: ununtu-latest
+    if: startsWith(github.event.ref, 'refs/tags/v')
+    steps:
+      - name: Execute remote SSH commands using KEY
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: whoami
