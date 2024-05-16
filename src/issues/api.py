@@ -6,6 +6,7 @@ from users.enums import Role
 
 from .enums import Status
 from .models import Issue, Message
+from . import openapi
 
 
 class IssueSerializer(serializers.ModelSerializer):
@@ -21,6 +22,11 @@ class IssueSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         attrs["status"] = Status.OPENED
         return attrs
+
+    @openapi.schemas.user_create
+    def get(self, request, *args, **kwargs):
+        """Get issues from the database."""
+        return super().get(request, *args, **kwargs)
 
 
 class IssuesAPI(generics.ListCreateAPIView):
