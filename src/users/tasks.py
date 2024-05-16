@@ -10,5 +10,5 @@ def send_activation_mail(recipient: str, activation_link: uuid.UUID):
         subject="User activation",
         message=f"Please, activate you account: {activation_link}",
         from_email="admin@support.com",
-        recipient_list=[recipient]
+        recipient_list=[recipient],
     )

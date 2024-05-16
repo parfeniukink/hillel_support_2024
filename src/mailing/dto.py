@@ -4,6 +4,7 @@ from rest_framewok import serializers
 # entities (or values objects in some cases)
 # Data Transfer Ojbects
 
+
 class EmailMessage:
     body: str
     subject: str

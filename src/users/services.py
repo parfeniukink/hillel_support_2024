@@ -49,14 +49,12 @@ class Activator:
         # save record to the Redis with TTL of 1 day
 
         cache = CacheService()
-        payload = {
-            "user_id": internal_user_id
-        }
+        payload = {"user_id": internal_user_id}
         cache.save(
             namespace="activation",
             key=str(activation_key),
             instance=payload,
-            ttl=2_000
+            ttl=2_000,
         )
 
     def validate_activation(self, activation_key: uuid.UUID) -> None:

@@ -28,7 +28,6 @@ nested_structure = {
 def extract_nested(
     data: dict, parents: list[str] | None = None, nested: int = 0
 ) -> Generator[tuple, None, None]:
-
     if nested > 100:
         raise NotImplementedError
 
