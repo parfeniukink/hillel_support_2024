@@ -23,7 +23,7 @@ jobs:
 
   deploy-to-production:
     needs: code-quality
-    runs-on: ununtu-latest
+    runs-on: ubuntu-latest
     if: startsWith(github.event.ref, 'refs/tags/v')
     steps:
       - uses: actions/checkout@v4
