@@ -126,3 +126,16 @@ use_parentheses = true
 line_length = 79
 skip = 'venv,'
 src_paths = ["."]
+
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE  = 'config.settings'
+pythonpath = '..'
+cache_dir = '/tmp'
+python_files = 'test_*.py'
+python_functions = 'test_*'
+filterwarnings = [
+  'ignore:RuntimneWarning',
+  'ignore:UserWarning',
+  'ignore:DeprecationWarning',
+]

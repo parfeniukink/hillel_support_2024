@@ -12,7 +12,7 @@ from issues.api import (
 from rest_framework import permissions
 from rest_framework_simplejwt.views import TokenObtainPairView  # noqa
 from rest_framework_simplejwt.views import token_obtain_pair  # noqa
-from users.api import UserListCreateAPI, resend_activation_mail
+from users.api import UserListCreateAPI, resend_activation_mail, foo
 
 # HTTP GET /issues
 # HTTP POST /issues
@@ -41,6 +41,8 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
+    path("foo/", foo),
+
     # admin
     path("admin/", admin.site.urls),
     # users

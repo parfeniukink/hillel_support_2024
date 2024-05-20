@@ -20,6 +20,8 @@ jobs:
           python-version: "3.11"
       - name: Install dependencies
         run: echo "Linters passed"
+      - name: Run tests
+        run: pytest tests/
 
   deploy-to-production:
     needs: code-quality

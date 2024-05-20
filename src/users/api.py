@@ -121,3 +121,15 @@ def resend_activation_mail(request) -> Response:
 #     }
 
 #     return JsonResponse(results)
+
+
+
+import asyncio
+import time
+from django.http import JsonResponse
+
+
+async def foo(request):
+    await asyncio.sleep(5)
+
+    return JsonResponse(data={"message": "Hello"})
